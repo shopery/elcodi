@@ -40,6 +40,13 @@ interface PurchasableInterface
     DimensionableInterface
 {
     /**
+     * Gets name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Gets the variant SKU
      *
      * @return string
