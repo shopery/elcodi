@@ -80,6 +80,16 @@ class Variant implements VariantInterface
     protected $options;
 
     /**
+     * Gets name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->product->getName();
+    }
+
+    /**
      * Gets the variant SKU
      *
      * @return string
