@@ -119,7 +119,6 @@ class ElcodiProductExtension extends AbstractExtension implements EntitiesOverri
             'objectManagers',
             'twig',
             'directors',
-            'eventListeners',
         ];
     }
 
