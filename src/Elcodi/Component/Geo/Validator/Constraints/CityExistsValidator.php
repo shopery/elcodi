@@ -41,9 +41,8 @@ class CityExistsValidator extends ConstraintValidator
      *
      * @param LocationProviderInterface $locationProvider
      */
-    public function __construct(
-        LocationProviderInterface $locationProvider
-    ) {
+    public function __construct(LocationProviderInterface $locationProvider)
+    {
         $this->locationProvider = $locationProvider;
     }
 
@@ -55,26 +54,57 @@ class CityExistsValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        /**
-         * @var LocationData $location
-         */
-        try {
-            $location = $this
-                ->locationProvider
-                ->getLocation(
-                    $value
-                );
-        } catch (EntityNotFoundException $e) {
-            $location = null;
-        }
-
-        if (
-            !($location instanceof LocationData) ||
-            'city' != $location->getType()
-        ) {
+        $location = $this->findLocation($value);
+        if (!$this->validateLocation($location)) {
             $this
                 ->context
                 ->addViolation('Select a city');
         }
+    }
+
+    /**
+     * Find LocationData from an id
+     *
+     * @param $locationId
+     *
+     * @return LocationData|null
+     */
+    private function findLocation($locationId)
+    {
+        /**
+         * @var LocationData $location
+         */
+        try {
+            return $this
+                ->locationProvider
+                ->getLocation($locationId);
+
+        } catch (EntityNotFoundException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Check for LocationData validation
+     *
+     * @param LocationData|null $location
+     *
+     * @return bool
+     */
+    private function validateLocation($location)
+    {
+        if (!$location instanceof LocationData) {
+            return false;
+        }
+
+        if ('city' === $location->getType()) {
+            return true;
+        }
+
+        $children = $this
+            ->locationProvider
+            ->getChildren($location->getId());
+
+        return count($children) === 0;
     }
 }
