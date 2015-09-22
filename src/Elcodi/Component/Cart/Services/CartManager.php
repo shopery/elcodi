@@ -294,13 +294,15 @@ class CartManager
         if (is_int($quantity) && $quantity <= 0) {
             $this->silentRemoveLine($cart, $cartLine);
         } elseif (is_int($quantity)) {
+            $previousQuantity = $cartLine->getQuantity();
             $cartLine->setQuantity($quantity);
 
             $this
                 ->cartLineEventDispatcher
                 ->dispatchCartLineOnEditEvent(
                     $cart,
-                    $cartLine
+                    $cartLine,
+                    $previousQuantity
                 );
         } else {
 

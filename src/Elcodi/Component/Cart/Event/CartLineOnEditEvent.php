@@ -17,6 +17,8 @@
 
 namespace Elcodi\Component\Cart\Event;
 
+use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
+use Elcodi\Component\Cart\Entity\Interfaces\CartLineInterface;
 use Elcodi\Component\Cart\Event\Abstracts\AbstractCartLineEvent;
 
 /**
@@ -24,4 +26,38 @@ use Elcodi\Component\Cart\Event\Abstracts\AbstractCartLineEvent;
  */
 class CartLineOnEditEvent extends AbstractCartLineEvent
 {
+    /**
+     * @var int
+     */
+    private $previousStock;
+
+    /**
+     * Construct method
+     *
+     * @param CartInterface     $cart     Cart
+     * @param CartLineInterface $cartLine Cart line
+     * @param integer           $previousStock
+     */
+    public function __construct(
+        CartInterface $cart,
+        CartLineInterface $cartLine,
+        $previousStock
+    ) {
+        parent::__construct(
+            $cart,
+            $cartLine
+        );
+
+        $this->previousStock = $previousStock;
+    }
+
+    /**
+     * Get the previous stock.
+     *
+     * @return int
+     */
+    public function getPreviousStock()
+    {
+        return $this->previousStock;
+    }
 }

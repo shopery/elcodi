@@ -32,14 +32,14 @@ abstract class AbstractCartLineEvent extends Event
      *
      * cart
      */
-    private $cart;
+    protected $cart;
 
     /**
      * @var CartLineInterface
      *
      * cartLine
      */
-    private $cartLine;
+    protected $cartLine;
 
     /**
      * Construct method

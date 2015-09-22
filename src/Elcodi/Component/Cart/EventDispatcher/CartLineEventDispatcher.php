@@ -55,20 +55,23 @@ class CartLineEventDispatcher extends AbstractEventDispatcher
     /**
      * Dispatch cartLine event when is edited
      *
-     * @param CartInterface     $cart     Cart
-     * @param CartLineInterface $cartLine CartLine
+     * @param CartInterface     $cart          Cart
+     * @param CartLineInterface $cartLine      CartLine
+     * @param integer           $previousStock The previous stock
      *
      * @return $this Self object
      */
     public function dispatchCartLineOnEditEvent(
         CartInterface $cart,
-        CartLineInterface $cartLine
+        CartLineInterface $cartLine,
+        $previousStock
     ) {
         $this->eventDispatcher->dispatch(
             ElcodiCartEvents::CARTLINE_ONEDIT,
             new CartLineOnEditEvent(
                 $cart,
-                $cartLine
+                $cartLine,
+                $previousStock
             )
         );
 
