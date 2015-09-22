@@ -25,6 +25,13 @@ use RuntimeException;
 class PluginConfiguration
 {
     /**
+     * Plugin configuration values (Not fields) to keep on merge.
+     *
+     * @var array
+     */
+    protected $keepOnMerge = ['visible'];
+
+    /**
      * @var array
      *
      * Encoded configuration
@@ -175,9 +182,26 @@ class PluginConfiguration
             }
         }
 
+        $this->keepOldValues($newPluginConfiguration);
+
         $this->setConfiguration($newPluginConfiguration->getConfiguration());
 
         return $this;
+    }
+
+    protected function keepOldValues(
+        PluginConfiguration $newPluginConfiguration
+    ) {
+        $arrayConfiguration = $newPluginConfiguration->getConfiguration();
+        foreach ($this->keepOnMerge as $fieldName) {
+            if (
+                isset($arrayConfiguration[$fieldName]) &&
+                isset($this->configuration[$fieldName])
+            ) {
+                $arrayConfiguration[$fieldName] = $this->configuration[$fieldName];
+            }
+        }
+        $newPluginConfiguration->setConfiguration($arrayConfiguration);
     }
 
     /**
