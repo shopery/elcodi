@@ -53,40 +53,58 @@ class AddressFormatter
      */
     public function toArray(AddressInterface $address)
     {
-        $cityLocationId   = $address->getCity();
-        $cityHierarchy    = $this
-            ->locationProvider
-            ->getHierarchy($cityLocationId);
-        $cityHierarchyAsc = array_reverse($cityHierarchy);
+        $cityLocationId = $address->getCity();
+        $cityInfo = $this->getCityInfo($cityLocationId);
 
         $addressArray = [
-            'id'               => $address->getId(),
-            'name'             => $address->getName(),
-            'recipientName'    => $address->getRecipientName(),
+            'id' => $address->getId(),
+            'name' => $address->getName(),
+            'recipientName' => $address->getRecipientName(),
             'recipientSurname' => $address->getRecipientSurname(),
-            'address'          => $address->getAddress(),
-            'addressMore'      => $address->getAddressMore(),
-            'postalCode'       => $address->getPostalcode(),
-            'phone'            => $address->getPhone(),
-            'mobile'           => $address->getMobile(),
-            'comment'          => $address->getComments(),
+            'address' => $address->getAddress(),
+            'addressMore' => $address->getAddressMore(),
+            'postalCode' => $address->getPostalcode(),
+            'phone' => $address->getPhone(),
+            'mobile' => $address->getMobile(),
+            'comment' => $address->getComments(),
+            'city' => $cityInfo,
+            'fullAddress' => $this->buildFullAddressString(
+                $address,
+                $cityInfo
+            ),
         ];
 
-        foreach ($cityHierarchyAsc as $cityLocationNode) {
+        return $addressArray;
+    }
+
+    /**
+     * Get the city inheritance info.
+     *
+     * @param integer $cityLocationId
+     *
+     * @return array
+     */
+    protected function getCityInfo($cityLocationId)
+    {
+        if (empty($cityLocationId)) {
+            return [];
+        }
+
+        $cityHierarchy = $this
+            ->locationProvider
+            ->getHierarchy($cityLocationId);
+        $cityHierarchy = array_reverse($cityHierarchy);
+
+        $cityInfo = [];
+        foreach ($cityHierarchy as $cityLocationNode) {
             /**
              * @var LocationData $cityLocationNode
              */
-            $addressArray['city'][$cityLocationNode->getType()]
+            $cityInfo[$cityLocationNode->getType()]
                 = $cityLocationNode->getName();
         }
 
-        $addressArray['fullAddress'] =
-            $this->buildFullAddressString(
-                $address,
-                $addressArray['city']
-            );
-
-        return $addressArray;
+        return $cityInfo;
     }
 
     /**
