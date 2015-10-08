@@ -119,7 +119,6 @@ class ElcodiMediaExtension extends AbstractExtension implements EntitiesOverrida
             'elcodi.image_upload_field_name'                => $config['images']['upload']['field_name'],
             'elcodi.image_resize_engine'                    => $config['images']['resize']['engine'],
             'elcodi.image_resize_converter_bin_path'        => $config['images']['resize']['converter_bin_path'],
-            'elcodi.image_resize_converter_default_profile' => $config['images']['resize']['converter_default_profile'],
         ];
     }
 

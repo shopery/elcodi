@@ -36,22 +36,13 @@ class ImageMagickResizeAdapter implements ResizeAdapterInterface
     private $imageConverterBin;
 
     /**
-     * @var string
-     *
-     * Default ICC profile path
-     */
-    private $profile;
-
-    /**
      * Constructor method
      *
      * @param string $imageConverterBin Path of image converter
-     * @param string $profile           Default ICC profile path
      */
-    public function __construct($imageConverterBin, $profile)
+    public function __construct($imageConverterBin)
     {
         $this->imageConverterBin = $imageConverterBin;
-        $this->profile = $profile;
     }
 
     /**
@@ -87,9 +78,9 @@ class ImageMagickResizeAdapter implements ResizeAdapterInterface
             ->add($this->imageConverterBin)
             //Crop white surrounding image
             ->add($originalFile->getPathname())
-            //We use a CMKY profile and a sRGB
-            ->add('-profile')
-            ->add($this->profile);
+            ->add('-strip')
+            ->add('-quality')
+            ->add('70%');
 
         //Lanczos filter for reduction
         $pb->add('-filter')->add('Lanczos');

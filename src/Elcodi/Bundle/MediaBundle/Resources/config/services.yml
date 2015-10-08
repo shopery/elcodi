@@ -31,4 +31,3 @@ services:
         class: Elcodi\Component\Media\Adapter\Resizer\ImageMagickResizeAdapter
         arguments:
             - %elcodi.image_resize_converter_bin_path%
-            - %elcodi.image_resize_converter_default_profile%
