@@ -18,6 +18,7 @@
 namespace Elcodi\Component\Cart\EventListener;
 
 use Elcodi\Component\Cart\Event\OrderOnCreatedEvent;
+use Elcodi\Component\Cart\Event\OrderPostCreatedEvent;
 use Elcodi\Component\Shipping\Entity\ShippingMethod;
 use Elcodi\Component\Shipping\Wrapper\ShippingWrapper;
 
@@ -48,11 +49,11 @@ class OrderShippingMethodEventListener
      *
      * Flushes all loaded order and related entities.
      *
-     * @param OrderOnCreatedEvent $event Event
+     * @param OrderPostCreatedEvent $event Event
      *
      * @return $this Self object
      */
-    public function saveOrder(OrderOnCreatedEvent $event)
+    public function saveOrder(OrderPostCreatedEvent $event)
     {
         $cart = $event->getCart();
         $shippingMethodId = $cart->getShippingMethod();

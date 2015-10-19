@@ -43,7 +43,7 @@ services:
         arguments:
             - @elcodi.wrapper.shipping_methods
         tags:
-            - { name: kernel.event_listener, event: order.oncreated, method: saveOrder, priority: 16}
+            - { name: kernel.event_listener, event: order.postcreated, method: saveOrder, priority: 16}
 
     elcodi.event_listener.order_creation:
         class: Elcodi\Component\Cart\EventListener\OrderCreationEventListener
@@ -51,8 +51,8 @@ services:
             - @elcodi.object_manager.order
             - @elcodi.object_manager.cart
         tags:
-            - { name: kernel.event_listener, event: order.oncreated, method: saveOrder, priority: 0}
-            - { name: kernel.event_listener, event: order.oncreated, method: setCartAsOrdered, priority: -16 }
+            - { name: kernel.event_listener, event: order.postcreated, method: saveOrder, priority: 0}
+            - { name: kernel.event_listener, event: order.postcreated, method: setCartAsOrdered, priority: -16 }
 
     elcodi.event_listener.order_line_creation:
         class: Elcodi\Component\Cart\EventListener\OrderLineCreationEventListener
