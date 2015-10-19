@@ -85,7 +85,7 @@ class PageRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($numberPerPage)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     /**
