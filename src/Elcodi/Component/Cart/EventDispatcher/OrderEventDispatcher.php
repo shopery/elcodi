@@ -21,6 +21,7 @@ use Elcodi\Component\Cart\ElcodiCartEvents;
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Entity\Interfaces\OrderInterface;
 use Elcodi\Component\Cart\Event\OrderOnCreatedEvent;
+use Elcodi\Component\Cart\Event\OrderPostCreatedEvent;
 use Elcodi\Component\Cart\Event\OrderPreCreatedEvent;
 use Elcodi\Component\Core\EventDispatcher\Abstracts\AbstractEventDispatcher;
 
@@ -62,6 +63,27 @@ class OrderEventDispatcher extends AbstractEventDispatcher
         $this->eventDispatcher->dispatch(
             ElcodiCartEvents::ORDER_ONCREATED,
             $orderPreCreatedEvent
+        );
+
+        return $this;
+    }
+
+    /**
+     * Event dispatched when a Cart has finally been to an Order
+     *
+     * @param CartInterface  $cart  Cart
+     * @param OrderInterface $order Order
+     *
+     * @return $this Self object
+     */
+    public function dispatchOrderPostCreatedEvent(
+        CartInterface $cart,
+        OrderInterface $order
+    ) {
+        $orderPostCreatedEvent = new OrderPostCreatedEvent($cart, $order);
+        $this->eventDispatcher->dispatch(
+            ElcodiCartEvents::ORDER_POSTCREATED,
+            $orderPostCreatedEvent
         );
 
         return $this;

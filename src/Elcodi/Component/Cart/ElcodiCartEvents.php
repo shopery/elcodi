@@ -99,12 +99,20 @@ final class ElcodiCartEvents
     const ORDER_PRECREATED = 'order.precreated';
 
     /**
-     * This event is dispatched when an order is created
+     * This event is dispatched when an order has just been created
      *
      * event.name : order.oncreated
      * event.class : OrderOnCreatedEvent
      */
     const ORDER_ONCREATED = 'order.oncreated';
+
+    /**
+     * This event is dispatched when an order has been finally created
+     *
+     * event.name : order.postcreated
+     * event.class : OrderPostCreatedEvent
+     */
+    const ORDER_POSTCREATED = 'order.postcreated';
 
     /**
      * Orderline created events

@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Elcodi\Component\Cart\Entity\Interfaces\OrderInterface;
-use Elcodi\Component\Cart\Event\OrderOnCreatedEvent;
+use Elcodi\Component\Cart\Event\OrderPostCreatedEvent;
 use Elcodi\Component\CartCoupon\EventDispatcher\OrderCouponEventDispatcher;
 use Elcodi\Component\CartCoupon\Services\CartCouponManager;
 use Elcodi\Component\CartCoupon\Services\OrderCouponManager;
@@ -86,14 +86,14 @@ class ConvertToOrderCouponsEventListener
      *
      * This method adds Coupon logic in this transformation
      *
-     * @param OrderOnCreatedEvent $orderOnCreatedEvent OrderOnCreated Event
+     * @param OrderPostCreatedEvent $OrderPostCreatedEvent OrderOnCreated Event
      *
      * @return null
      */
-    public function convertCouponToOrder(OrderOnCreatedEvent $orderOnCreatedEvent)
+    public function convertCouponToOrder(OrderPostCreatedEvent $OrderPostCreatedEvent)
     {
-        $order = $orderOnCreatedEvent->getOrder();
-        $cart = $orderOnCreatedEvent->getCart();
+        $order = $OrderPostCreatedEvent->getOrder();
+        $cart = $OrderPostCreatedEvent->getCart();
         $cartCouponAmount = $cart->getCouponAmount();
 
         if ($cartCouponAmount instanceof MoneyInterface) {

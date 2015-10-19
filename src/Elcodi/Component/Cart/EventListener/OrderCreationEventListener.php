@@ -19,7 +19,7 @@ namespace Elcodi\Component\Cart\EventListener;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Elcodi\Component\Cart\Event\OrderOnCreatedEvent;
+use Elcodi\Component\Cart\Event\OrderPostCreatedEvent;
 
 /**
  * Class OrderCreationEventListener
@@ -67,9 +67,9 @@ class OrderCreationEventListener
      *
      * Flushes all loaded order and related entities.
      *
-     * @param OrderOnCreatedEvent $event Event
+     * @param OrderPostCreatedEvent $event Event
      */
-    public function saveOrder(OrderOnCreatedEvent $event)
+    public function saveOrder(OrderPostCreatedEvent $event)
     {
         $order = $event->getOrder();
 
@@ -81,9 +81,9 @@ class OrderCreationEventListener
      * After an Order is created, the cart is set as Ordered enabling related
      * flag
      *
-     * @param OrderOnCreatedEvent $event Event
+     * @param OrderPostCreatedEvent $event Event
      */
-    public function setCartAsOrdered(OrderOnCreatedEvent $event)
+    public function setCartAsOrdered(OrderPostCreatedEvent $event)
     {
         $cart = $event
             ->getCart()

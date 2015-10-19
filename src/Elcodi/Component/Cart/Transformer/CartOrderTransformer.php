@@ -22,6 +22,7 @@ use Elcodi\Component\Cart\Entity\Interfaces\OrderInterface;
 use Elcodi\Component\Cart\EventDispatcher\OrderEventDispatcher;
 use Elcodi\Component\Cart\Factory\OrderFactory;
 use Elcodi\Component\Currency\Entity\Interfaces\MoneyInterface;
+use Elcodi\Component\Payment\Entity\PaymentMethod;
 
 /**
  * Class CartOrderTransformer
@@ -136,6 +137,13 @@ class CartOrderTransformer
         $this
             ->orderEventDispatcher
             ->dispatchOrderOnCreatedEvent(
+                $cart,
+                $order
+            );
+
+        $this
+            ->orderEventDispatcher
+            ->dispatchOrderPostCreatedEvent(
                 $cart,
                 $order
             );
