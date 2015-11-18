@@ -8,8 +8,23 @@ elcodi.route.image_resize:
     defaults:
         _controller: elcodi.controller.image_resize:resizeAction
 
+elcodi.route.image_resize_seo:
+    path: /images/{id}/resize/{height}/{width}/{type}/{name}.{_format}
+    methods: GET
+    defaults:
+        _controller: elcodi.controller.image_resize:resizeAction
+
 elcodi.route.image_view:
     path: /images/{id}/render.{_format}
+    methods: GET
+    defaults:
+        _controller: elcodi.controller.image_resize:resizeAction
+        height: 0
+        width: 0
+        type: 0
+
+elcodi.route.image_view_seo:
+    path: /images/{id}/render/{name}.{_format}
     methods: GET
     defaults:
         _controller: elcodi.controller.image_resize:resizeAction

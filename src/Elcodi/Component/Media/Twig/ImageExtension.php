@@ -76,19 +76,36 @@ class ImageExtension extends Twig_Extension
     private $modifiedContext;
 
     /**
+     * @var string
+     *
+     * Resize route name for seo purposes (With image name)
+     */
+    private $imageResizeSeoControllerRouteName;
+
+    /**
+     * @var string
+     *
+     * View route name for seo purposes (With image name)
+     */
+    private $imageViewSeoControllerRouteName;
+
+    /**
      * Construct method
      *
-     * @param UrlGeneratorInterface $router                         Router
-     * @param string                $imageResizeControllerRouteName Image resize controller route name
-     * @param string                $imageViewControllerRouteName   Image view controller route name
-     * @param string                $generatedRouteHost             Host part of the URL to be overridden, if present
+     * @param UrlGeneratorInterface $router                            Router
+     * @param string                $imageResizeControllerRouteName    Image resize controller route name
+     * @param string                $imageResizeSeoControllerRouteName Seo image resize controller route name
+     * @param string                $imageViewControllerRouteName      Image view controller route name
+     * @param string                $imageViewSeoControllerRouteName   Seo image view controller route name
+     * @param string                $generatedRouteHost                Host part of the URL to be overridden, if present
      */
     public function __construct(
         UrlGeneratorInterface $router,
         $imageResizeControllerRouteName,
+        $imageResizeSeoControllerRouteName,
         $imageViewControllerRouteName,
+        $imageViewSeoControllerRouteName,
         $generatedRouteHost = ''
-
     ) {
         $this->router = $router;
         $this->imageResizeControllerRouteName = $imageResizeControllerRouteName;
@@ -104,6 +121,8 @@ class ImageExtension extends Twig_Extension
             ->getContext();
 
         $this->modifiedContext = clone($this->originalContext);
+        $this->imageResizeSeoControllerRouteName = $imageResizeSeoControllerRouteName;
+        $this->imageViewSeoControllerRouteName = $imageViewSeoControllerRouteName;
     }
 
     /**
@@ -136,15 +155,28 @@ class ImageExtension extends Twig_Extension
             : false;
         $routeReferenceType = $this->getReferenceType($absoluteUrlOption);
 
-        $generatedRoute = $this
-            ->router
-            ->generate($this->imageResizeControllerRouteName, [
-                'id' => (int) $imageMedia->getId(),
-                'height' => (int) $options['height'],
-                'width' => (int) $options['width'],
-                'type' => (int) $options['type'],
-                '_format' => $imageMedia->getExtension(),
-            ], $routeReferenceType);
+        if (empty($options['name'])) {
+            $generatedRoute = $this
+                ->router
+                ->generate($this->imageResizeControllerRouteName, [
+                    'id' => (int)$imageMedia->getId(),
+                    'height' => (int)$options['height'],
+                    'width' => (int)$options['width'],
+                    'type' => (int)$options['type'],
+                    '_format' => $imageMedia->getExtension(),
+                ], $routeReferenceType);
+        } else {
+            $generatedRoute = $this
+                ->router
+                ->generate($this->imageResizeSeoControllerRouteName, [
+                    'id' => (int)$imageMedia->getId(),
+                    'height' => (int)$options['height'],
+                    'width' => (int)$options['width'],
+                    'type' => (int)$options['type'],
+                    'name' => urlencode($options['name']),
+                    '_format' => $imageMedia->getExtension(),
+                ], $routeReferenceType);
+        }
 
         $this->fixRouterContext();
 
@@ -165,12 +197,22 @@ class ImageExtension extends Twig_Extension
 
         $routeReferenceType = $this->getReferenceType($absoluteUrl);
 
-        $generatedRoute = $this
-            ->router
-            ->generate($this->imageViewControllerRouteName, [
-                'id' => (int) $imageMedia->getId(),
-                '_format' => $imageMedia->getExtension(),
-            ], $routeReferenceType);
+        if (empty($options['name'])) {
+            $generatedRoute = $this
+                ->router
+                ->generate($this->imageViewControllerRouteName, [
+                    'id' => (int)$imageMedia->getId(),
+                    '_format' => $imageMedia->getExtension(),
+                ], $routeReferenceType);
+        } else {
+            $generatedRoute = $this
+                ->router
+                ->generate($this->imageViewControllerRouteName, [
+                    'id' => (int)$imageMedia->getId(),
+                    'name' => urlencode($options['name']),
+                    '_format' => $imageMedia->getExtension(),
+                ], $routeReferenceType);
+        }
 
         $this->fixRouterContext();
 
