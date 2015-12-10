@@ -18,11 +18,11 @@
 namespace Elcodi\Component\Media\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Elcodi\Component\Media\Entity\Interfaces\ImageInterface;
 use Elcodi\Component\Media\EventDispatcher\MediaEventDispatcher;
 use Elcodi\Component\Media\Exception\InvalidImageException;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class ImageUploader
@@ -80,13 +80,13 @@ class ImageUploader
     /**
      * Upload an image
      *
-     * @param UploadedFile $file File to upload
+     * @param File $file File to upload
      *
      * @return ImageInterface|null Uploaded image or false is error
      *
      * @throws InvalidImageException File is not an image
      */
-    public function uploadImage(UploadedFile $file)
+    public function uploadImage(File $file)
     {
         $image = $this
             ->imageManager
