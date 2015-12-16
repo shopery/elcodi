@@ -51,20 +51,6 @@ class PaymentMethod
     protected $url;
 
     /**
-     * @var Array
-     *
-     * Payment types (credit cards, etc) allowed
-     */
-    protected $type;
-
-    /**
-     * @var Array
-     *
-     * Payment method company
-     */
-    protected $company;
-
-    /**
      * @var string
      *
      * Image url
@@ -85,8 +71,6 @@ class PaymentMethod
      * @param string $name        Name
      * @param string $description Description
      * @param string $url         Url
-     * @param array  $type        Type of payment allowed
-     * @param array  $company     Payment Method Company
      * @param string $imageUrl    Image url
      * @param string $script      Script
      */
@@ -96,9 +80,7 @@ class PaymentMethod
         $description,
         $url,
         $imageUrl = '',
-        $script = '',
-        $type = [],
-        $company = []
+        $script = ''
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -106,8 +88,6 @@ class PaymentMethod
         $this->url = $url;
         $this->imageUrl = $imageUrl;
         $this->script = $script;
-        $this->type = $type;
-        $this->company = $company;
     }
 
     /**
@@ -128,26 +108,6 @@ class PaymentMethod
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Gets field company
-     *
-     * @return Array
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    /**
-     * Gets field type
-     *
-     * @return Array
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
