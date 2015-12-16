@@ -60,34 +60,24 @@ class ShippingMethod
     protected $price;
 
     /**
-     * @var string
-     *
-     * Company name
-     */
-    protected $company;
-
-    /**
      * @param string         $id          Id
      * @param string         $carrierName Carrier name
      * @param string         $name        Name
      * @param string         $description Description
      * @param MoneyInterface $price       Price
-     * @param string         $company
      */
     public function __construct(
         $id,
         $carrierName,
         $name,
         $description,
-        MoneyInterface $price,
-        $company = ''
+        MoneyInterface $price
     ) {
         $this->id = $id;
         $this->carrierName = $carrierName;
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;
-        $this->company = $company;
     }
 
     /**
@@ -139,15 +129,4 @@ class ShippingMethod
     {
         return $this->price;
     }
-
-    /**
-     * Gets field company
-     *
-     * @return string
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
 }
