@@ -17,12 +17,14 @@
 
 namespace Elcodi\Component\Cart\Services;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Entity\Interfaces\CartLineInterface;
 use Elcodi\Component\Cart\EventDispatcher\CartEventDispatcher;
 use Elcodi\Component\Cart\EventDispatcher\CartLineEventDispatcher;
 use Elcodi\Component\Cart\Factory\CartFactory;
 use Elcodi\Component\Cart\Factory\CartLineFactory;
+use Elcodi\Component\Geo\Entity\Interfaces\AddressInterface;
 use Elcodi\Component\Product\Entity\Interfaces\PurchasableInterface;
 
 /**
@@ -64,13 +66,6 @@ class CartManager
     private $cartLineEventDispatcher;
 
     /**
-     * @var CartFactory
-     *
-     * cartFactory
-     */
-    private $cartFactory;
-
-    /**
      * @var CartLineFactory
      *
      * CartLine Factory
@@ -78,23 +73,30 @@ class CartManager
     private $cartLineFactory;
 
     /**
+     * @var ObjectManager
+     *
+     * ObjectManager for Cart entity
+     */
+    private $cartObjectManager;
+
+    /**
      * Construct method
      *
      * @param CartEventDispatcher     $cartEventDispatcher     Cart Event Dispatcher
      * @param CartLineEventDispatcher $cartLineEventDispatcher CartLine Event dispatcher
-     * @param CartFactory             $cartFactory             Cart factory
      * @param CartLineFactory         $cartLineFactory         CartLine factory
+     * @param ObjectManager           $cartObjectManager       Cart object manager
      */
     public function __construct(
         CartEventDispatcher $cartEventDispatcher,
         CartLineEventDispatcher $cartLineEventDispatcher,
-        CartFactory $cartFactory,
-        CartLineFactory $cartLineFactory
+        CartLineFactory $cartLineFactory,
+        ObjectManager $cartObjectManager
     ) {
         $this->cartEventDispatcher = $cartEventDispatcher;
         $this->cartLineEventDispatcher = $cartLineEventDispatcher;
-        $this->cartFactory = $cartFactory;
         $this->cartLineFactory = $cartLineFactory;
+        $this->cartObjectManager = $cartObjectManager;
     }
 
     /**
@@ -456,5 +458,55 @@ class CartManager
             ->dispatchCartLoadEvents($cart);
 
         return $this;
+    }
+
+    /**
+     * Sets the billing address and dispatchs an event.
+     *
+     * @param CartInterface    $cart
+     * @param AddressInterface $address
+     */
+    public function setBillingAddress(
+        CartInterface $cart,
+        AddressInterface $address
+    ) {
+        $cart->setBillingAddress($address);
+
+        $this
+            ->cartEventDispatcher
+            ->dispatchCartBillingAddressOnChangeEvent($cart);
+    }
+
+    /**
+     * Sets the delivery address and dispatchs an event.
+     *
+     * @param CartInterface    $cart
+     * @param AddressInterface $address
+     */
+    public function setDeliveryAddress(
+        CartInterface $cart,
+        AddressInterface $address
+    ) {
+        $cart->setDeliveryAddress($address);
+
+        $this
+            ->cartEventDispatcher
+            ->dispatchCartDeliveryAddressOnChangeEvent($cart);
+    }
+
+    /**
+     * Saves the given cart
+     *
+     * @param CartInterface $cart
+     */
+    public function saveCart(CartInterface $cart)
+    {
+        if (!$cart->getCartLines()->isEmpty()) {
+            $this->cartObjectManager->persist($cart);
+
+            $this
+                ->cartObjectManager
+                ->flush($cart);
+        }
     }
 }

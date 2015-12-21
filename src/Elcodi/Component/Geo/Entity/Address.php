@@ -338,4 +338,24 @@ class Address implements AddressInterface
     {
         return $this->postalCode;
     }
+
+    /**
+     * Checks if two addresses are the same.
+     *
+     * @param AddressInterface $address
+     *
+     * @return bool
+     */
+    public function equals(AddressInterface $address)
+    {
+        return
+            $this->getRecipientName() == $address->getRecipientName()
+            && $this->getRecipientSurname() == $address->getRecipientSurname()
+            && $this->getCity() == $address->getCity()
+            && $this->getPostalcode() == $address->getPostalcode()
+            && $this->getAddress() == $address->getAddress()
+            && $this->getAddressMore() == $address->getAddressMore()
+            && $this->getPhone() == $address->getPhone()
+            && $this->getMobile() == $address->getMobile();
+    }
 }

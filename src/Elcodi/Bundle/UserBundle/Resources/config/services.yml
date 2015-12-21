@@ -15,6 +15,9 @@ services:
         class: Elcodi\Component\User\Services\CustomerManager
         arguments:
             - @elcodi.event_dispatcher.user
+            - @elcodi.object_manager.address
+            - @elcodi.event_dispatcher.customer
+            - @elcodi.manager.address
 
     elcodi.manager.admin_user:
         class: Elcodi\Component\User\Services\AdminUserManager

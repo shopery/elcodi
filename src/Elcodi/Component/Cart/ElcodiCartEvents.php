@@ -23,6 +23,14 @@ namespace Elcodi\Component\Cart;
 final class ElcodiCartEvents
 {
     /**
+     * This event is dispatched when a new cart is created
+     *
+     * event.name : cart.oncreate
+     * event.class : CartOnCreateEvent
+     */
+    const CART_ONCREATE = 'cart.oncreate';
+
+    /**
      * This event is dispatched before the Cart is loaded
      *
      * event.name : cart.preload
@@ -125,4 +133,24 @@ final class ElcodiCartEvents
      * event.class : OrderLineOnCreatedEvent
      */
     const ORDERLINE_ONCREATED = 'order_line.oncreated';
+
+    /**
+     * Cart address events
+     */
+
+    /**
+     * This event is dispatched when a cart billing address is changed
+     *
+     * event.name : cart_billing_address.onchange
+     * event.class : CartAddressOnChangeEvent
+     */
+    const CARTBILLINGADDRESS_ONCHANGE = 'cart_billing_address.onchange';
+
+    /**
+     * This event is dispatched when a cart shipping address is changed
+     *
+     * event.name : cart_shipping_address.onchange
+     * event.class : CartAddressOnChangeEvent
+     */
+    const CARTDELIVERYADDRESS_ONCHANGE = 'cart_delivery_address.onchange';
 }

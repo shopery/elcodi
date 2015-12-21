@@ -27,19 +27,13 @@ use Elcodi\Component\Media\Entity\Interfaces\ImageInterface;
 use Elcodi\Component\Media\Repository\ImageRepository;
 use Elcodi\Component\Media\Services\ImageManager;
 use Elcodi\Component\Media\Transformer\Interfaces\ImageEtagTransformerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImageController
  */
 class ImageResizeController
 {
-    /**
-     * @var RequestStack
-     *
-     * Request stack
-     */
-    private $requestStack;
-
     /**
      * @var ImageRepository
      *
@@ -78,7 +72,6 @@ class ImageResizeController
     /**
      * Construct method
      *
-     * @param RequestStack                  $requestStack         Request Stack
      * @param ImageRepository               $imageRepository      Image Repository
      * @param ImageManager                  $imageManager         Image Manager
      * @param ImageEtagTransformerInterface $imageEtagTransformer ImageEtagTransformer Image Etag Transformer
@@ -86,14 +79,12 @@ class ImageResizeController
      * @param integer                       $sharedMaxAge         Shared max size
      */
     public function __construct(
-        RequestStack $requestStack,
         ImageRepository $imageRepository,
         ImageManager $imageManager,
         ImageEtagTransformerInterface $imageEtagTransformer,
         $maxAge,
         $sharedMaxAge
     ) {
-        $this->requestStack = $requestStack;
         $this->imageRepository = $imageRepository;
         $this->imageManager = $imageManager;
         $this->imageEtagTransformer = $imageEtagTransformer;
@@ -109,20 +100,8 @@ class ImageResizeController
      * @throws RuntimeException        Request not found
      * @throws EntityNotFoundException Requested image does not exist
      */
-    public function resizeAction()
+    public function resizeAction(Request $request)
     {
-        $request = $this
-            ->requestStack
-            ->getCurrentRequest();
-
-        /**
-         * Request not found because this controller is not running under
-         * Request scope
-         */
-        if (!($request instanceof Request)) {
-            throw new RuntimeException('Request object not found');
-        }
-
         $id = $request->get('id');
 
         /**
@@ -133,7 +112,7 @@ class ImageResizeController
             ->find($id);
 
         if (!($image instanceof ImageInterface)) {
-            throw new EntityNotFoundException($this->imageRepository->getClassName());
+            throw new NotFoundHttpException($this->imageRepository->getClassName());
         }
 
         return $this->buildResponseFromImage(

@@ -6,7 +6,6 @@ services:
     elcodi.controller.image_resize:
         class: Elcodi\Component\Media\Controller\ImageResizeController
         arguments:
-            - @request_stack
             - @elcodi.repository.image
             - @elcodi.manager.media_image
             - @elcodi.transformer.media_image_etag

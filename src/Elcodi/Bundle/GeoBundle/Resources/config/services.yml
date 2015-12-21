@@ -35,5 +35,6 @@ services:
     elcodi.manager.address:
         class: Elcodi\Component\Geo\Services\AddressManager
         arguments:
+            - @elcodi.director.address
             - @elcodi.object_manager.address
             - @elcodi.event_dispatcher.address

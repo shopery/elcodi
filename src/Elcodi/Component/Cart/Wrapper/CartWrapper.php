@@ -199,6 +199,16 @@ class CartWrapper implements WrapperInterface
                 $cart = $this
                     ->cartFactory
                     ->create();
+
+                if ($customer->getId()) {
+                    $cart
+                        ->setCustomer($customer);
+                }
+
+                $this
+                    ->cartEventDispatcher
+                    ->dispatchCartOnCreateEvent($cart);
+
             } else {
 
                 /**
