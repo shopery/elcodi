@@ -21,8 +21,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Repository\CartRepository;
+use Elcodi\Component\Cart\Services\CartManager;
 use Elcodi\Component\Geo\Entity\Interfaces\AddressInterface;
-use Elcodi\Component\Geo\Event\AddressOnCloneEvent;
+use Elcodi\Component\User\Event\CustomerAddressOnChangeEvent;
 
 /**
  * Class AddressCloneEventListener
@@ -36,52 +37,40 @@ use Elcodi\Component\Geo\Event\AddressOnCloneEvent;
 class AddressCloneEventListener
 {
     /**
-     * @var CartRepository
+     * @var CartManager
      *
-     * The cart repository
+     * The cart manager
      */
-    private $cartRepository;
-
-    /**
-     * @var ObjectManager
-     *
-     * The cart object manager
-     */
-    private $cartObjectManager;
+    private $cartManager;
 
     /**
      * Builds an event listener
      *
-     * @param CartRepository $cartRepository
-     * @param ObjectManager  $cartObjectManager
+     * @param CartManager $cartManager
      */
     public function __construct(
-        CartRepository $cartRepository,
-        ObjectManager $cartObjectManager
+        CartManager $cartManager
     ) {
-        $this->cartRepository    = $cartRepository;
-        $this->cartObjectManager = $cartObjectManager;
+        $this->cartManager = $cartManager;
     }
 
     /**
      * Updates all the carts with the cloned address
      *
-     * @param AddressOnCloneEvent $event Event
+     * @param CustomerAddressOnChangeEvent $event Event
      */
-    public function updateCarts(AddressOnCloneEvent $event)
+    public function updateCarts(CustomerAddressOnChangeEvent $event)
     {
         $originalAddress = $event->getOriginalAddress();
-        $clonedAddress   = $event->getClonedAddress();
-        $carts           = $this
-            ->cartRepository
-            ->findAllCartsWithAddress($originalAddress);
+        $clonedAddress = $event->getClonedAddress();
+        $carts = $event->getCustomer()->getCarts();
 
         foreach ($carts as $cart) {
             /**
              * @var CartInterface $cart
              */
             $deliveryAddress = $cart->getDeliveryAddress();
-            $billingAddress  = $cart->getBillingAddress();
+            $billingAddress = $cart->getBillingAddress();
 
             if (
                 $deliveryAddress instanceof AddressInterface
@@ -97,7 +86,7 @@ class AddressCloneEventListener
                 $cart->setBillingAddress($clonedAddress);
             }
 
-            $this->cartObjectManager->flush($cart);
+            $this->cartManager->saveCart($cart);
         }
     }
 }

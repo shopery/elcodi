@@ -15,18 +15,18 @@
  * @author Elcodi Team <tech@elcodi.com>
  */
 
-namespace Elcodi\Component\Geo;
+namespace Elcodi\Component\User;
 
 /**
- * Core Events related with all core entities
+ * ElcodiCustomerEvents
  */
-final class ElcodiGeoEvents
+final class ElcodiCustomerEvents
 {
     /**
-     * This event is dispatched when an address is cloned by a customer
+     * This event is launched when an address has changed.
      *
-     * event.name : address.onclone
-     * event.class : AddressOnCloneEvent
+     * event.name : address.onchange
+     * event.class : Address
      */
-    const ADDRESS_ONCLONE = 'address.onclone';
+    const ADDRESS_ONCHANGE = 'address.onchange';
 }

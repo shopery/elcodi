@@ -8,8 +8,8 @@ services:
         arguments:
             - @elcodi.event_dispatcher.cart
             - @elcodi.event_dispatcher.cart_line
-            - @elcodi.factory.cart
             - @elcodi.factory.cart_line
+            - @elcodi.object_manager.cart
 
     elcodi.session_manager.cart:
         class: Elcodi\Component\Cart\Services\CartSessionManager

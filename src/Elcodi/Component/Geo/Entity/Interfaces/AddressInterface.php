@@ -189,4 +189,13 @@ interface AddressInterface
      * @return string Postalcode
      */
     public function getPostalcode();
+
+    /**
+     * Checks if two addresses are the same.
+     *
+     * @param AddressInterface $address
+     *
+     * @return mixed
+     */
+    public function equals(AddressInterface $address);
 }

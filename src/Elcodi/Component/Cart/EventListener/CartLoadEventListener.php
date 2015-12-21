@@ -47,13 +47,6 @@ use Elcodi\Component\Product\Entity\Interfaces\PurchasableInterface;
 class CartLoadEventListener
 {
     /**
-     * @var ObjectManager
-     *
-     * ObjectManager for Cart entity
-     */
-    private $cartObjectManager;
-
-    /**
      * @var CartEventDispatcher
      *
      * Cart EventDispatcher
@@ -91,8 +84,6 @@ class CartLoadEventListener
     /**
      * Built method
      *
-     * @param ObjectManager       $cartObjectManager   ObjectManager for Cart
-     *                                                 entity
      * @param CartEventDispatcher $cartEventDispatcher Cart event dispatcher
      * @param CartManager         $cartManager         Cart Manager
      * @param WrapperInterface    $currencyWrapper     Currency Wrapper
@@ -100,14 +91,12 @@ class CartLoadEventListener
      * @param boolean             $useStock            Use stock
      */
     public function __construct(
-        ObjectManager $cartObjectManager,
         CartEventDispatcher $cartEventDispatcher,
         CartManager $cartManager,
         WrapperInterface $currencyWrapper,
         CurrencyConverter $currencyConverter,
         $useStock = false
     ) {
-        $this->cartObjectManager = $cartObjectManager;
         $this->cartEventDispatcher = $cartEventDispatcher;
         $this->cartManager = $cartManager;
         $this->currencyWrapper = $currencyWrapper;
@@ -179,15 +168,7 @@ class CartLoadEventListener
      */
     public function saveCart(CartOnLoadEvent $event)
     {
-        $cart = $event->getCart();
-
-        if (!$cart->getCartLines()->isEmpty()) {
-            $this->cartObjectManager->persist($cart);
-        }
-
-        $this
-            ->cartObjectManager
-            ->flush();
+        $this->cartManager->saveCart($event->getCart());
     }
 
     /**

@@ -22,6 +22,8 @@ use Doctrine\ORM\EntityRepository;
 use Elcodi\Component\User\Entity\Interfaces\AbstractUserInterface;
 use Elcodi\Component\User\Entity\Interfaces\CustomerInterface;
 use Elcodi\Component\User\Repository\Interfaces\UserEmaileableInterface;
+use Elcodi\Component\User\Entity\Customer;
+use Elcodi\Component\Geo\Entity\Address;
 
 /**
  * Class CustomerRepository
@@ -57,31 +59,32 @@ class CustomerRepository extends EntityRepository implements UserEmaileableInter
      */
     public function findAddress($customerId, $addressId)
     {
-        $response = $this
-            ->createQueryBuilder('c')
-            ->select(
-                ['c', 'a']
-            )
-            ->innerJoin('c.addresses', 'a')
-            ->where('c.id = :customerId')
-            ->andWhere('a.id = :addressId')
+        $customerClass = Customer::class;
+        $addressClass = Address::class;
+
+        $dql = <<<DQL
+SELECT
+    a
+FROM
+    {$customerClass} c
+INNER JOIN
+    {$addressClass} a
+WHERE
+    a.id = :addressId
+    AND c.id = :customerId
+DQL;
+
+
+        $result = $this
+            ->getEntityManager()
+            ->createQuery($dql)
             ->setParameter('customerId', $customerId)
             ->setParameter('addressId', $addressId)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
+            ->execute();
 
-        if (!empty($response)) {
-            /**
-             * @var CustomerInterface $customer
-             */
-            $customer = reset($response);
-            $addresses = $customer->getAddresses();
-            if ($addresses) {
-                return $addresses->first();
-            }
-        }
 
-        return false;
+        return !empty($result)
+            ? reset($result)
+            : false;
     }
 }

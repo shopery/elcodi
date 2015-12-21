@@ -10,3 +10,7 @@ services:
     elcodi.event_dispatcher.password:
         class: Elcodi\Component\User\EventDispatcher\PasswordEventDispatcher
         parent: elcodi.event_dispatcher.abstract
+
+    elcodi.event_dispatcher.customer:
+        class: Elcodi\Component\User\EventDispatcher\CustomerEventDispatcher
+        parent: elcodi.event_dispatcher.abstract

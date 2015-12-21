@@ -20,7 +20,9 @@ namespace Elcodi\Component\Cart\EventDispatcher;
 use Elcodi\Component\Cart\ElcodiCartEvents;
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Entity\Interfaces\CartLineInterface;
+use Elcodi\Component\Cart\Event\CartAddressOnChangeEvent;
 use Elcodi\Component\Cart\Event\CartInconsistentEvent;
+use Elcodi\Component\Cart\Event\CartOnCreateEvent;
 use Elcodi\Component\Cart\Event\CartOnEmptyEvent;
 use Elcodi\Component\Cart\Event\CartOnLoadEvent;
 use Elcodi\Component\Cart\Event\CartPreLoadEvent;
@@ -128,6 +130,60 @@ class CartEventDispatcher extends AbstractEventDispatcher
         $this->eventDispatcher->dispatch(
             ElcodiCartEvents::CART_ONEMPTY,
             new CartOnEmptyEvent($cart)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Dispatch an event when the cart billing address is changed.
+     *
+     * @param CartInterface $cart
+     *
+     * @return $this
+     */
+    public function dispatchCartBillingAddressOnChangeEvent(
+        CartInterface $cart
+    ) {
+        $this->eventDispatcher->dispatch(
+            ElcodiCartEvents::CARTBILLINGADDRESS_ONCHANGE,
+            new CartAddressOnChangeEvent($cart)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Dispatch an event when the cart delivery address is changed.
+     *
+     * @param CartInterface $cart
+     *
+     * @return $this
+     */
+    public function dispatchCartDeliveryAddressOnChangeEvent(
+        CartInterface $cart
+    ) {
+        $this->eventDispatcher->dispatch(
+            ElcodiCartEvents::CARTDELIVERYADDRESS_ONCHANGE,
+            new CartAddressOnChangeEvent($cart)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Dispatch an event when a new cart is created
+     *
+     * @param CartInterface $cart
+     *
+     * @return $this
+     */
+    public function dispatchCartOnCreateEvent(
+        CartInterface $cart
+    ) {
+        $this->eventDispatcher->dispatch(
+            ElcodiCartEvents::CART_ONCREATE,
+            new CartOnCreateEvent($cart)
         );
 
         return $this;
