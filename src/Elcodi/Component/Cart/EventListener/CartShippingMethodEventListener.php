@@ -87,9 +87,9 @@ class CartShippingMethodEventListener
                 );
 
             $cart
-                ->setAmount(
-                    $cartAmount->add($convertedShippingAmount)
-                );
+                ->setShippingAmount($convertedShippingAmount)
+                ->setAmount($cartAmount->add($convertedShippingAmount))
+            ;
         }
 
         return $this;
