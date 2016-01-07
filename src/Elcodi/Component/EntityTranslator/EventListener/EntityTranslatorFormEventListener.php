@@ -207,6 +207,10 @@ class EntityTranslatorFormEventListener implements EventSubscriberInterface
     {
         $entity = $event->getData();
         $form = $event->getForm();
+        if (!$form->isValid()) {
+            return;
+        }
+
         $formHash = $this->getFormHash($form);
         $entityConfiguration = $this->getTranslatableEntityConfiguration($entity);
 
