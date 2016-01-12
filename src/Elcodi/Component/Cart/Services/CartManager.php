@@ -278,24 +278,18 @@ class CartManager
         CartLineInterface $cartLine,
         $quantity
     ) {
-        $cart = $cartLine->getCart();
-
-        if (!($cart instanceof CartInterface)) {
+        if (!is_numeric($quantity)) {
             return $this;
         }
 
-        /**
-         * If $quantity is an integer and is less or equal than 0, means that
-         * full line must be removed.
-         *
-         * Otherwise, $quantity can have two values:
-         * * null or false - Quantity is not affected
-         * * integer higher than 0, quantity is edited and all changes are
-         *   recalculated.
-         */
-        if (is_int($quantity) && $quantity <= 0) {
+        $cart = $cartLine->getCart();
+        if ($cart instanceof CartInterface === false) {
+            return $this;
+        }
+
+        if ($quantity <= 0) {
             $this->silentRemoveLine($cart, $cartLine);
-        } elseif (is_int($quantity)) {
+        } else {
             $previousQuantity = $cartLine->getQuantity();
             $cartLine->setQuantity($quantity);
 
@@ -306,14 +300,6 @@ class CartManager
                     $cartLine,
                     $previousQuantity
                 );
-        } else {
-
-            /**
-             * Nothing to do here. Quantity value is not an integer, so will not
-             * be treated as such
-             */
-
-            return $this;
         }
 
         $this
@@ -506,7 +492,12 @@ class CartManager
 
             $this
                 ->cartObjectManager
-                ->flush($cart);
+                ->flush(array_merge(
+                    $cart->getCartLines()->toArray(),
+                    [
+                        $cart,
+                    ]
+                ));
         }
     }
 }
