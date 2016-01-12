@@ -506,7 +506,12 @@ class CartManager
 
             $this
                 ->cartObjectManager
-                ->flush($cart);
+                ->flush(array_merge(
+                    $cart->getCartLines()->toArray(),
+                    [
+                        $cart,
+                    ]
+                ));
         }
     }
 }
