@@ -57,6 +57,7 @@ Elcodi\Component\Cart\Entity\CartLine:
                 name: product_id
                 referencedColumnName: id
                 nullable: false
+                onDelete: CASCADE
         variant:
             targetEntity: Elcodi\Component\Product\Entity\Interfaces\VariantInterface
             fetch: EAGER
@@ -64,3 +65,4 @@ Elcodi\Component\Cart\Entity\CartLine:
                 name: variant_id
                 referencedColumnName: id
                 nullable: true
+                onDelete: CASCADE
