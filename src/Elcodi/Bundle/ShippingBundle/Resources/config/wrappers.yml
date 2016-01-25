@@ -7,3 +7,5 @@ services:
         class: Elcodi\Component\Shipping\Wrapper\ShippingWrapper
         arguments:
             - @elcodi.event_dispatcher.shipping
+        tags:
+            - { name: kernel.event_listener, event: cart.onload, method: clear, priority: 1024 }

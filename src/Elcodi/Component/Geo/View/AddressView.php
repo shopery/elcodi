@@ -284,6 +284,28 @@ class AddressView
     }
 
     /**
+     * Gets the state
+     *
+     * @return LocationData|null
+     */
+    public function getState()
+    {
+        $hierarchy = $this->getAddressHierarchy($this->address);
+
+        foreach ($hierarchy as $location) {
+
+            /**
+             * @var LocationData $location
+             */
+            if ('state' == $location->getType()) {
+                return $location;
+            }
+        }
+
+        return isset($hierarchy[1]) ? $hierarchy[1] : null;
+    }
+
+    /**
      * Gets the address hierarchy.
      *
      * @param AddressInterface $address
