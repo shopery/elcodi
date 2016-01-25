@@ -487,17 +487,13 @@ class CartManager
      */
     public function saveCart(CartInterface $cart)
     {
-        if (!$cart->getCartLines()->isEmpty()) {
-            $this->cartObjectManager->persist($cart);
+        $this->cartObjectManager->persist($cart);
 
-            $this
-                ->cartObjectManager
-                ->flush(array_merge(
-                    $cart->getCartLines()->toArray(),
-                    [
-                        $cart,
-                    ]
-                ));
-        }
+        $entities = $cart->getCartLines()->toArray();
+        $entities[] = $cart;
+
+        $this
+            ->cartObjectManager
+            ->flush($entities);
     }
 }
