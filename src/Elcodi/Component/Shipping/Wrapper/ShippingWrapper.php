@@ -34,12 +34,18 @@ class ShippingWrapper
     private $shippingEventDispatcher;
 
     /**
+     * @var array|null
+     */
+    private $shippingMethods;
+
+    /**
      * Construct
      *
-     * @param ShippingEventDispatcher $shippingEventDispatcher Shipping event dispatcher
+     * @param ShippingEventDispatcher $shippingEventDispatcher Shipping event
+     *                                                         dispatcher
      */
-    public function __construct(ShippingEventDispatcher $shippingEventDispatcher)
-    {
+    public function __construct(ShippingEventDispatcher $shippingEventDispatcher
+    ) {
         $this->shippingEventDispatcher = $shippingEventDispatcher;
     }
 
@@ -52,9 +58,7 @@ class ShippingWrapper
      */
     public function get(CartInterface $cart)
     {
-        return $this
-            ->shippingEventDispatcher
-            ->dispatchPaymentCollectionEvent($cart);
+        return $this->getShippingMethods($cart);
     }
 
     /**
@@ -67,7 +71,7 @@ class ShippingWrapper
      */
     public function getOneById(CartInterface $cart, $shippingMethodId)
     {
-        $shippingMethods = $this->get($cart);
+        $shippingMethods = $this->getShippingMethods($cart);
 
         return array_reduce(
             $shippingMethods,
@@ -85,12 +89,37 @@ class ShippingWrapper
     }
 
     /**
-     * Clean loaded object in order to reload it again.
-     *
-     * @return $this Self object
+     * Clears the shipping method
      */
-    public function clean()
+    public function clear()
     {
-        return $this;
+        $this->shippingMethods = null;
+    }
+
+    /**
+     * Gets the shipping methods
+     *
+     * @param CartInterface $cart
+     *
+     * @return array
+     */
+    protected function getShippingMethods(CartInterface $cart)
+    {
+        if (null == $this->shippingMethods) {
+            $this->shippingMethods = $this->collectShippingMethods($cart);
+        }
+        return $this->shippingMethods;
+    }
+
+    /**
+     * @param CartInterface $cart
+     *
+     * @return array
+     */
+    protected function collectShippingMethods(CartInterface $cart)
+    {
+        return $this
+            ->shippingEventDispatcher
+            ->dispatchPaymentCollectionEvent($cart);
     }
 }
