@@ -4,7 +4,8 @@ services:
     # Services
     #
     elcodi.store:
-        class: Elcodi\Component\Store\Entity\Interfaces\StoreInterface
+        class: Elcodi\Component\Store\Entity\Store
+        lazy: true
         factory:
             - @elcodi.wrapper.store
             - get
@@ -38,7 +39,7 @@ services:
             - getTemplate
 
     elcodi.store_template:
-        class: Elcodi\Component\Plugin\Entity\Interfaces\PluginInterface
+        class: Elcodi\Component\Plugin\Entity\Plugin
         public: false
         factory:
             - @elcodi.repository.plugin
@@ -54,8 +55,9 @@ services:
             - getBundleName
 
     elcodi.store_default_language:
-        class: Elcodi\Component\Language\Entity\Interfaces\LanguageInterface
+        class: Elcodi\Component\Language\Entity\Language
         public: false
+        lazy: true
         factory:
             - @elcodi.store
             - getDefaultLanguage

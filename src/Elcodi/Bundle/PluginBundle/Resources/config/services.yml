@@ -45,6 +45,7 @@ services:
     elcodi.abstract_plugin:
         abstract: true
         class: Elcodi\Component\Plugin\Entity\Plugin
+        lazy: true
         factory:
             - @elcodi.repository.plugin
             - findOneByNamespace
