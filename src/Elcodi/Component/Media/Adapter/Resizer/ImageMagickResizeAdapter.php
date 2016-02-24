@@ -78,6 +78,7 @@ class ImageMagickResizeAdapter implements ResizeAdapterInterface
             ->add($this->imageConverterBin)
             //Crop white surrounding image
             ->add($originalFile->getPathname())
+            ->add('-auto-orient')
             ->add('-strip')
             ->add('-quality')
             ->add('70%');
