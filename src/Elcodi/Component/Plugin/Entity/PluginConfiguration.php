@@ -25,11 +25,16 @@ use RuntimeException;
 class PluginConfiguration
 {
     /**
+     * The parameter where the visibility of the plugin is saved
+     */
+    const VISIBILITY_PARAMETER = 'visible';
+
+    /**
      * Plugin configuration values (Not fields) to keep on merge.
      *
      * @var array
      */
-    protected $keepOnMerge = ['visible'];
+    protected $keepOnMerge = [self::VISIBILITY_PARAMETER];
 
     /**
      * @var array
@@ -214,5 +219,20 @@ class PluginConfiguration
     public static function create(array $configuration)
     {
         return new self($configuration);
+    }
+
+    public function visible()
+    {
+        $this->configuration[self::VISIBILITY_PARAMETER] = true;
+    }
+
+    public function hidden()
+    {
+        $this->configuration[self::VISIBILITY_PARAMETER] = false;
+    }
+
+    public function isVisible()
+    {
+        return $this->configuration[self::VISIBILITY_PARAMETER];
     }
 }
