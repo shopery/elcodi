@@ -17,10 +17,13 @@
 
 namespace Elcodi\Component\Plugin\Loader;
 
+use Elcodi\Component\Plugin\Repository\PluginRepository;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Elcodi\Component\Plugin\Interfaces\PluginInterface as PluginBundleInterface;
 
 use Elcodi\Component\Plugin\Entity\Plugin;
 
@@ -37,13 +40,6 @@ class RouterLoader extends Loader
     private $loaded = false;
 
     /**
-     * @var Plugin[]
-     *
-     * Plugins
-     */
-    private $plugins;
-
-    /**
      * @var KernelInterface
      *
      * Kernel
@@ -53,15 +49,12 @@ class RouterLoader extends Loader
     /**
      * Construct
      *
-     * @param KernelInterface $kernel  Kernel
-     * @param Plugin[]        $plugins Plugins
+     * @param KernelInterface $kernel Kernel
      */
     public function __construct(
-        KernelInterface $kernel,
-        array $plugins
+        KernelInterface $kernel
     ) {
         $this->kernel = $kernel;
-        $this->plugins = $plugins;
     }
 
     /**
@@ -99,13 +92,14 @@ class RouterLoader extends Loader
     protected function addPluginsRoutesCollection()
     {
         $routes = new RouteCollection();
-
-        foreach ($this->plugins as $plugin) {
-            $routes->addCollection(
-                $this->addPluginRoutesCollection($plugin)
-            );
+        $bundles = $this->kernel->getBundles();
+        foreach ($bundles as $bundle) {
+            if ($bundle instanceof PluginBundleInterface) {
+                $routes->addCollection(
+                    $this->addPluginRoutesCollection($bundle)
+                );
+            }
         }
-
         return $routes;
     }
 
@@ -114,29 +108,32 @@ class RouterLoader extends Loader
      *
      * @return RouteCollection Collection generated
      */
-    protected function addPluginRoutesCollection(Plugin $plugin)
+    protected function addPluginRoutesCollection(BundleInterface $pluginBundle)
     {
         $routes = new RouteCollection();
-        $bundleName = $plugin->getBundleName();
-        $bundle = $this
-            ->kernel
-            ->getBundle($bundleName);
-
         $routingFilePath = '/Resources/config/routing.yml';
-        $resourcePath = $bundle->getPath() . $routingFilePath;
+        $resourcePath = $pluginBundle->getPath() . $routingFilePath;
         $type = 'yaml';
 
         if (file_exists($resourcePath)) {
             $routes->addCollection(
                 $this
-                ->import(
-                    '@' . $bundle->getName() . $routingFilePath,
-                    $type
-                )
+                    ->import(
+                        '@' . $pluginBundle->getName() . $routingFilePath,
+                        $type
+                    )
             );
         }
 
         return $routes;
+    }
+
+    private function getPluginBundles()
+    {
+        $bundles = $this->kernel->getBundles();
+        foreach ($bundles as $bundle) {
+
+        }
     }
 
     /**
@@ -145,7 +142,8 @@ class RouterLoader extends Loader
      * @param mixed       $resource A resource
      * @param string|null $type     The resource type or null if unknown
      *
-     * @return bool True if this class supports the given resource, false otherwise
+     * @return bool True if this class supports the given resource, false
+     *              otherwise
      */
     public function supports($resource, $type = null)
     {

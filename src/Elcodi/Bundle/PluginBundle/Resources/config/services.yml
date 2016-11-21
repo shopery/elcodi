@@ -21,7 +21,6 @@ services:
         class: Elcodi\Component\Plugin\Loader\RouterLoader
         arguments:
             - @kernel
-            - @elcodi.plugins
         tags:
             - { name: routing.loader }
 
