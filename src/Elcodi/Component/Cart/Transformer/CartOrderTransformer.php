@@ -20,9 +20,9 @@ namespace Elcodi\Component\Cart\Transformer;
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Entity\Interfaces\OrderInterface;
 use Elcodi\Component\Cart\EventDispatcher\OrderEventDispatcher;
+use Elcodi\Component\Cart\Exception\CartInconsistencyException;
 use Elcodi\Component\Cart\Factory\OrderFactory;
 use Elcodi\Component\Currency\Entity\Interfaces\MoneyInterface;
-use Elcodi\Component\Payment\Entity\PaymentMethod;
 
 /**
  * Class CartOrderTransformer
@@ -89,9 +89,14 @@ class CartOrderTransformer
      * @param CartInterface $cart Cart to create order from
      *
      * @return OrderInterface the created order
+     * @throws CartInconsistencyException If order cannot be generated for the given cart
      */
     public function createOrderFromCart(CartInterface $cart)
     {
+        if ($cart->getQuantity() <= 0) {
+            throw new CartInconsistencyException("Please add items to your cart to create an order");
+        }
+
         $this
             ->orderEventDispatcher
             ->dispatchOrderPreCreatedEvent(
