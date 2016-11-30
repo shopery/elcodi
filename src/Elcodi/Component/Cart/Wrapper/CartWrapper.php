@@ -21,6 +21,7 @@ use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\EventDispatcher\CartEventDispatcher;
 use Elcodi\Component\Cart\Factory\CartFactory;
 use Elcodi\Component\Core\Wrapper\Interfaces\WrapperInterface;
+use Elcodi\Component\User\Entity\Customer;
 use Elcodi\Component\User\Entity\Interfaces\CustomerInterface;
 use Elcodi\Component\User\Wrapper\CustomerWrapper;
 
@@ -115,16 +116,20 @@ class CartWrapper implements WrapperInterface
             ->get();
 
         $cartFromCustomer = $this->getCustomerCart($customer);
-        $cartFromSession = $this
-            ->cartSessionWrapper
-            ->get();
+        $cartFromSession = $this->cartSessionWrapper->get();
 
-        $this->cart = $this
+        $cart = $this
             ->resolveCarts(
-                $customer,
                 $cartFromCustomer,
                 $cartFromSession
             );
+
+        if (null === $cart) {
+            $this->cart = $this->getNewCart($customer);
+        } else {
+            $this->ensureCartIsAssignedToCustomer($cart, $customer);
+            $this->cart = $cart;
+        }
 
         $this
             ->cartEventDispatcher
@@ -174,59 +179,48 @@ class CartWrapper implements WrapperInterface
     /**
      * Resolves a cart given a customer cart and a session cart
      *
-     * @param CustomerInterface  $customer         Customer
      * @param CartInterface|null $cartFromCustomer Customer Cart
      * @param CartInterface|null $cartFromSession  Cart loaded from session
      *
      * @return CartInterface Cart resolved
      */
     private function resolveCarts(
-        CustomerInterface $customer,
         CartInterface $cartFromCustomer = null,
         CartInterface $cartFromSession = null
     ) {
-        if ($cartFromCustomer) {
+        if (null == $cartFromCustomer && null == $cartFromSession) {
+            return null;
+        } elseif (null == $cartFromCustomer) {
+            return $cartFromSession;
+        } elseif (null == $cartFromSession) {
             return $cartFromCustomer;
-        } else {
-            if (!$cartFromSession) {
+        }
 
-                /**
-                 * Customer has no pending carts, and there is no cart in
-                 * session.
-                 *
-                 * We create a new Cart
-                 */
-                $cart = $this
-                    ->cartFactory
-                    ->create();
+        if ($cartFromSession->getQuantity() > 0) {
+            return $cartFromSession;
+        }
 
-                if ($customer->getId()) {
-                    $cart
-                        ->setCustomer($customer);
-                }
+        return $cartFromCustomer;
+    }
 
-                $this
-                    ->cartEventDispatcher
-                    ->dispatchCartOnCreateEvent($cart);
+    private function getNewCart(CustomerInterface $customer)
+    {
+        $cart = $this->cartFactory->create();
 
-            } else {
+        $this->ensureCartIsAssignedToCustomer($cart, $customer);
 
-                /**
-                 * Customer has no pending carts, and there is a cart loaded
-                 * in session.
-                 *
-                 * If customer is not a pristine entity since it has already
-                 * been flushed, we associate this cart with customer
-                 */
-                $cart = $cartFromSession;
+        $this
+            ->cartEventDispatcher
+            ->dispatchCartOnCreateEvent($cart);
+    }
 
-                if ($customer->getId()) {
-                    $cart->setCustomer($customer);
-                    $customer->addCart($cart);
-                }
-            }
-
-            return $cart;
+    private function ensureCartIsAssignedToCustomer(
+        CartInterface $cart,
+        CustomerInterface $customer
+    ) {
+        if ($customer->getId()) {
+            $cart->setCustomer($customer);
+            $customer->addCart($cart);
         }
     }
 }

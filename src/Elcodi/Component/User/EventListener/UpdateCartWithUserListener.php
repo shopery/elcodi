@@ -18,6 +18,7 @@
 namespace Elcodi\Component\User\EventListener;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Elcodi\Component\Cart\Wrapper\CartSessionWrapper;
 use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
@@ -30,11 +31,11 @@ use Elcodi\Component\User\Entity\Interfaces\CustomerInterface;
 class UpdateCartWithUserListener
 {
     /**
-     * @var CartWrapper
+     * @var CartSessionWrapper
      *
      * Cart Wrapper holding reference to current Cart
      */
-    private $cartWrapper;
+    private $cartSessionWrapper;
 
     /**
      * @var ObjectManager
@@ -46,14 +47,13 @@ class UpdateCartWithUserListener
     /**
      * Construct method
      *
-     * @param CartWrapper   $cartWrapper Cart Wrapper
      * @param ObjectManager $cartManager Object Manager
      */
     public function __construct(
-        CartWrapper $cartWrapper,
+        CartSessionWrapper $cartSessionWrapper,
         ObjectManager $cartManager
     ) {
-        $this->cartWrapper = $cartWrapper;
+        $this->cartSessionWrapper = $cartSessionWrapper;
         $this->cartManager = $cartManager;
     }
 
@@ -68,27 +68,40 @@ class UpdateCartWithUserListener
      */
     public function onAuthenticationSuccess(AuthenticationEvent $event)
     {
-        $loggedUser = $event
+        $customer = $this->getLoggedCustomer($event);
+        $cart = $this->getSessionCart();
+
+        if ($this->isValidCartAndUserIsCorrectlyLogged($cart, $customer)) {
+            $this->assignCartToCustomer($cart, $customer);
+        }
+    }
+
+    private function isValidCartAndUserIsCorrectlyLogged($cart, $customer)
+    {
+        return
+            ($customer instanceof CustomerInterface) &&
+            ($cart instanceof CartInterface && $cart->getId());
+    }
+
+    private function getSessionCart()
+    {
+        return $this
+            ->cartSessionWrapper
+            ->get();
+    }
+
+    private function getLoggedCustomer(AuthenticationEvent $event)
+    {
+        return $event
             ->getAuthenticationToken()
             ->getUser();
+    }
 
-        $cart = $this
-            ->cartWrapper
-            ->get();
-
-        if (
-            ($loggedUser instanceof CustomerInterface) &&
-            ($cart instanceof CartInterface && $cart->getId())
-        ) {
-            /*
-             * We assume that a cart with an ID is
-             * not a pristine entity coming from a
-             * factory method. (i.e. has already been
-             * flushed)
-             */
-            $cart->setCustomer($loggedUser);
-
-            $this->cartManager->flush($cart);
-        }
+    private function assignCartToCustomer(
+        CartInterface $cart,
+        CustomerInterface $customer
+    ) {
+        $cart->setCustomer($customer);
+        $this->cartManager->flush($cart);
     }
 }
