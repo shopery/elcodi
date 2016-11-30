@@ -212,6 +212,8 @@ class CartWrapper implements WrapperInterface
         $this
             ->cartEventDispatcher
             ->dispatchCartOnCreateEvent($cart);
+
+        return $cart;
     }
 
     private function ensureCartIsAssignedToCustomer(
