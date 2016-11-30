@@ -59,10 +59,17 @@ class CurrencyExchangeRatesPopulator
     /**
      * Construct method
      *
-     * @param CurrencyExchangeRatesProviderAdapterInterface $currencyExchangeRatesAdapter       ExchangeRates adapter
-     * @param ObjectDirector                                $currencyExchangeRateObjectDirector Currency Exchange rate object director
-     * @param CurrencyRepository                            $currencyRepository                 Currency repository
-     * @param string                                        $defaultCurrency                    Default currency
+     * @param CurrencyExchangeRatesProviderAdapterInterface $currencyExchangeRatesAdapter       ExchangeRates
+     *                                                                                          adapter
+     * @param ObjectDirector                                $currencyExchangeRateObjectDirector Currency
+     *                                                                                          Exchange
+     *                                                                                          rate
+     *                                                                                          object
+     *                                                                                          director
+     * @param CurrencyRepository                            $currencyRepository                 Currency
+     *                                                                                          repository
+     * @param string                                        $defaultCurrency                    Default
+     *                                                                                          currency
      */
     public function __construct(
         CurrencyExchangeRatesProviderAdapterInterface $currencyExchangeRatesAdapter,
@@ -117,6 +124,12 @@ class CurrencyExchangeRatesPopulator
             ->findOneBy([
                 'iso' => $this->defaultCurrency,
             ]);
+
+        if (!$sourceCurrency instanceof CurrencyInterface) {
+            throw new \RuntimeException(
+                "Source currency not found (ISO: '{$this->defaultCurrency}') to calculate exchange rates from/to"
+            );
+        }
 
         /**
          * [
