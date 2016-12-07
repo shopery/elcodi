@@ -101,7 +101,10 @@ class Machine implements MachineInterface
         $transitionName
     ) {
         if (!$this->transitionChain->hasTransition($transitionName)) {
-            throw new TransitionNotValidException($transitionName);
+            throw new TransitionNotValidException(
+                $startStateName,
+                $transitionName
+            );
         }
 
         $transition = $this
@@ -112,7 +115,10 @@ class Machine implements MachineInterface
             );
 
         if (!($transition instanceof Transition)) {
-            throw new TransitionNotAccessibleException();
+            throw new TransitionNotAccessibleException(
+                $startStateName,
+                $transitionName
+            );
         }
 
         return $transition;
@@ -140,7 +146,10 @@ class Machine implements MachineInterface
             );
 
         if (!($transition instanceof Transition)) {
-            throw new StateNotReachableException();
+            throw new StateNotReachableException(
+                $startStateName,
+                $finalStateName
+            );
         }
 
         return $transition;
