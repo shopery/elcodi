@@ -94,7 +94,10 @@ class CartOrderTransformer
     public function createOrderFromCart(CartInterface $cart)
     {
         if ($cart->getQuantity() <= 0) {
-            throw new CartInconsistencyException("Please add items to your cart to create an order");
+            throw new CartInconsistencyException(
+                $cart->getId(),
+                "Please add items to your cart to create an order"
+            );
         }
 
         $this
