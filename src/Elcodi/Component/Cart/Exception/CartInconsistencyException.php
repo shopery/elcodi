@@ -24,4 +24,9 @@ use Exception;
  */
 class CartInconsistencyException extends Exception
 {
+    public function __construct($cartId, $message)
+    {
+        $message = "Cart '$cartId'': $message";
+        parent::__construct($message);
+    }
 }
