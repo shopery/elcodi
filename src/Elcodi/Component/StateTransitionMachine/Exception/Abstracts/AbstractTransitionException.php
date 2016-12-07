@@ -24,4 +24,15 @@ use Exception;
  */
 abstract class AbstractTransitionException extends Exception
 {
+    public function __construct($from = null, $to = null)
+    {
+        $messageParts = ['Executing transaction'];
+        if ($from) {
+            $messageParts[] = "from '$from''";
+        }
+        if ($to) {
+            $messageParts[] = "to '$to''";
+        }
+        parent::__construct(implode(' ', $messageParts));
+    }
 }

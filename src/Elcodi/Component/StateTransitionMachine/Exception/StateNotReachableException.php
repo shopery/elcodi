@@ -17,11 +17,11 @@
 
 namespace Elcodi\Component\StateTransitionMachine\Exception;
 
-use Exception;
+use Elcodi\Component\StateTransitionMachine\Exception\Abstracts\AbstractTransitionException;
 
 /**
  * Class StateNotReachableException
  */
-class StateNotReachableException extends Exception
+class StateNotReachableException extends AbstractTransitionException
 {
 }
