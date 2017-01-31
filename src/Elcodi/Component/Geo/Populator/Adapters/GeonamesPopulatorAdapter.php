@@ -114,7 +114,10 @@ class GeonamesPopulatorAdapter implements PopulatorInterface
             if (!file_exists($dirname)) {
                 mkdir($dirname, 0777, true);
             }
-            $downloadUrl = 'http://download.geonames.org/export/zip/' . $countryCode . '.zip';
+            $downloadUrl = sprintf(
+                'http://download.geonames.org/dump/zip/%s.zip',
+                strtoupper($countryCode)
+            );
             copy($downloadUrl, $tempname);
         }
 
