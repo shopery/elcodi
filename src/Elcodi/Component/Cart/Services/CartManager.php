@@ -362,7 +362,7 @@ class CartManager
 
         $this
             ->cartLineEventDispatcher
-            ->dispatchCartLineOnBeforeAddEvent(
+            ->dispatchCartLineBeforeAddEvent(
                 $cart,
                 $purchasable,
                 $quantity

@@ -23,9 +23,9 @@ use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Product\Entity\Interfaces\PurchasableInterface;
 
 /**
- * Class CartLineOnBeforeAddEvent
+ * Class CartLineBeforeAddEvent
  */
-class CartLineOnBeforeAddEvent extends Event
+class CartLineBeforeAddEvent extends Event
 {
     /**
      * @var CartInterface

@@ -69,10 +69,10 @@ final class ElcodiCartEvents
     /**
      * This event is dispatched before a CartLine is being added into a Cart
      *
-     * event.name : cart_line.onbeforeadd
-     * event.class : CartLineOnBeforeAddEvent
+     * event.name : cart_line.beforeadd
+     * event.class : CartLineBeforeAddEvent
      */
-    const CARTLINE_ONBEFOREADD = 'cart_line.onbeforeadd';
+    const CARTLINE_BEFOREADD = 'cart_line.beforeadd';
 
     /**
      * This event is dispatched after a CartLine is being added into a Cart

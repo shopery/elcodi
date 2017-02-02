@@ -21,7 +21,7 @@ use Elcodi\Component\Cart\ElcodiCartEvents;
 use Elcodi\Component\Cart\Entity\Interfaces\CartInterface;
 use Elcodi\Component\Cart\Entity\Interfaces\CartLineInterface;
 use Elcodi\Component\Cart\Event\CartLineOnAddEvent;
-use Elcodi\Component\Cart\Event\CartLineOnBeforeAddEvent;
+use Elcodi\Component\Cart\Event\CartLineBeforeAddEvent;
 use Elcodi\Component\Cart\Event\CartLineOnEditEvent;
 use Elcodi\Component\Core\EventDispatcher\Abstracts\AbstractEventDispatcher;
 use Elcodi\Component\Product\Entity\Interfaces\PurchasableInterface;
@@ -37,14 +37,14 @@ class CartLineEventDispatcher extends AbstractEventDispatcher
      * @param PurchasableInterface $purchasable
      * @param int $quantity
      */
-    public function dispatchCartLineOnBeforeAddEvent(
+    public function dispatchCartLineBeforeAddEvent(
         CartInterface $cart,
         PurchasableInterface $purchasable,
         $quantity
     ) {
         $this->eventDispatcher->dispatch(
-            ElcodiCartEvents::CARTLINE_ONBEFOREADD,
-            new CartLineOnBeforeAddEvent(
+            ElcodiCartEvents::CARTLINE_BEFOREADD,
+            new CartLineBeforeAddEvent(
                 $cart,
                 $purchasable,
                 $quantity
