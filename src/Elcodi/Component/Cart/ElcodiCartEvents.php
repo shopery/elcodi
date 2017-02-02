@@ -67,7 +67,15 @@ final class ElcodiCartEvents
      */
 
     /**
-     * This event is dispatched when a CartLine is being added into a Cart
+     * This event is dispatched before a CartLine is being added into a Cart
+     *
+     * event.name : cart_line.onbeforeadd
+     * event.class : CartLineOnBeforeAddEvent
+     */
+    const CARTLINE_ONBEFOREADD = 'cart_line.onbeforeadd';
+
+    /**
+     * This event is dispatched after a CartLine is being added into a Cart
      *
      * event.name : cart_line.onadd
      * event.class : CartLineOnAddEvent
@@ -107,20 +115,20 @@ final class ElcodiCartEvents
     const ORDER_PRECREATED = 'order.precreated';
 
     /**
-     * This event is dispatched when an order has just been created
-     *
-     * event.name : order.oncreated
-     * event.class : OrderOnCreatedEvent
-     */
-    const ORDER_ONCREATED = 'order.oncreated';
-
-    /**
      * This event is dispatched when an order has been finally created
      *
      * event.name : order.postcreated
      * event.class : OrderPostCreatedEvent
      */
     const ORDER_POSTCREATED = 'order.postcreated';
+
+    /**
+     * This event is dispatched when an order has just been created
+     *
+     * event.name : order.oncreated
+     * event.class : OrderOnCreatedEvent
+     */
+    const ORDER_ONCREATED = 'order.oncreated';
 
     /**
      * Orderline created events

@@ -360,6 +360,14 @@ class CartManager
             ->setPurchasable($purchasable)
             ->setQuantity($quantity);
 
+        $this
+            ->cartLineEventDispatcher
+            ->dispatchCartLineOnBeforeAddEvent(
+                $cart,
+                $purchasable,
+                $quantity
+            );
+
         $this->addLine($cart, $cartLine);
 
         return $this;
