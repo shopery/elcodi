@@ -335,6 +335,9 @@ class Plugin
             throw new RuntimeException('Both plugins cannot be merged');
         }
 
+        $this->category = $newPlugin->category;
+        $this->type = $newPlugin->type;
+
         $this
             ->configuration
             ->merge($newPlugin->getConfiguration());
