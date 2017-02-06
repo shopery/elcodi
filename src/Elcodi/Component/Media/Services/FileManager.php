@@ -52,7 +52,9 @@ class FileManager
      * Construct method
      *
      * @param Filesystem                         $fileSystem                Filesystem
-     * @param FileIdentifierTransformerInterface $fileIdentifierTransformer File identifier transformer
+     * @param FileIdentifierTransformerInterface $fileIdentifierTransformer File
+     *                                                                      identifier
+     *                                                                      transformer
      */
     public function __construct(
         Filesystem $fileSystem,
@@ -111,5 +113,15 @@ class FileManager
         $file->setContent($content);
 
         return $file;
+    }
+
+    public function deleteFile(FileInterface $file)
+    {
+        $this
+            ->filesystem
+            ->delete($this
+                ->fileIdentifierTransformer
+                ->transform($file)
+            );
     }
 }
