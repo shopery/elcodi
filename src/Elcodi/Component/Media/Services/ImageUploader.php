@@ -101,7 +101,7 @@ class ImageUploader
 
         $this->fileManager->uploadFile(
             $image,
-            $image->setContent($image),
+            $image->getContent(),
             true
         );
 
