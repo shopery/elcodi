@@ -18,6 +18,7 @@
 namespace Elcodi\Component\Plugin\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Elcodi\Component\Plugin\Factory\PluginFactory;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -62,23 +63,31 @@ class PluginManager
     private $pluginLoader;
 
     /**
+     * @var PluginFactory
+     */
+    private $pluginFactory;
+
+    /**
      * Construct
      *
      * @param KernelInterface  $kernel              Kernel
      * @param PluginRepository $pluginRepository    Plugin repository
      * @param ObjectManager    $pluginObjectManager Plugin object manager
      * @param PluginLoader     $pluginLoader        Plugin Loader
+     * @param PluginFactory    $pluginFactory       Plugin factory
      */
     public function __construct(
         KernelInterface $kernel,
         PluginRepository $pluginRepository,
         ObjectManager $pluginObjectManager,
-        PluginLoader $pluginLoader
+        PluginLoader $pluginLoader,
+        PluginFactory $pluginFactory
     ) {
         $this->kernel = $kernel;
         $this->pluginRepository = $pluginRepository;
         $this->pluginObjectManager = $pluginObjectManager;
         $this->pluginLoader = $pluginLoader;
+        $this->pluginFactory = $pluginFactory;
     }
 
     /**
@@ -173,7 +182,7 @@ class PluginManager
         $pluginEnabledByDefault = $pluginConfiguration['enabled_by_default'];
         unset($pluginConfiguration['type']);
 
-        $pluginInstance = Plugin::create(
+        $pluginInstance = $this->pluginFactory->create(
             $pluginNamespace,
             $pluginType,
             $pluginCategory,
