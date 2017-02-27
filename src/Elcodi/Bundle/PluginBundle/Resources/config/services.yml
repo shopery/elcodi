@@ -3,6 +3,9 @@ services:
     #
     # Services
     #
+    elcodi.factory.plugin:
+        class: Elcodi\Component\Plugin\Factory\PluginFactory
+
     elcodi.manager.plugin:
         class: Elcodi\Component\Plugin\Services\PluginManager
         arguments:
@@ -10,6 +13,7 @@ services:
             - @elcodi.repository.plugin
             - @elcodi.object_manager.plugin
             - @elcodi.loader.plugin
+            - @elcodi.factory.plugin
 
     elcodi.loader.plugin:
         class: Elcodi\Component\Plugin\Services\PluginLoader
