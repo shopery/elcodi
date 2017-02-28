@@ -255,7 +255,7 @@ class EntityTranslatorFormEventListener implements EventSubscriberInterface
      * Get configuration for a translatable entity, or null if the entity is not
      * translatable
      *
-     * @param Object $entity Entity
+     * @param mixed $entity Entity
      *
      * @return array|null Configuration
      */
@@ -291,7 +291,7 @@ class EntityTranslatorFormEventListener implements EventSubscriberInterface
     /**
      * @param string $formHash
      * @param array  $configuration
-     * @param object $entity
+     * @param mixed  $entity
      */
     private function collectTranslations($formHash, array $configuration, $entity)
     {
@@ -325,7 +325,7 @@ class EntityTranslatorFormEventListener implements EventSubscriberInterface
      * Set translations for an entity
      *
      * @param string $alias
-     * @param object $entity
+     * @param mixed  $entity
      * @param string $idGetter
      * @param array  $fields
      */

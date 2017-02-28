@@ -34,7 +34,7 @@ class EntityTranslatorFactory
      * @param array                              $configuration             Configuration
      * @param boolean                            $fallback                  Fallback
      *
-     * @return Object Empty entity
+     * @return mixed Empty entity
      */
     public function create(
         EntityTranslationProviderInterface $entityTranslationProvider,

@@ -76,7 +76,7 @@ abstract class AbstractFactory
      * This method must always return an empty instance of the related Entity
      * and must initialize it in a consistent state
      *
-     * @return Object Empty entity
+     * @return mixed Empty entity
      */
     abstract public function create();
 }

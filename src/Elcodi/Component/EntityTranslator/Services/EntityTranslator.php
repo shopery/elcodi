@@ -70,10 +70,10 @@ class EntityTranslator implements EntityTranslatorInterface
     /**
      * Translate object
      *
-     * @param Object $object Object
+     * @param mixed  $object Object
      * @param string $locale Locale to be translated
      *
-     * @return Object Translated Object
+     * @return mixed Translated Object
      */
     public function translate($object, $locale)
     {
@@ -122,7 +122,7 @@ class EntityTranslator implements EntityTranslatorInterface
      *      ),
      * );
      *
-     * @param Object $object       Object
+     * @param mixed  $object       Object
      * @param array  $translations Translations
      *
      * @return $this Self object

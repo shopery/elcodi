@@ -152,7 +152,7 @@ class ObjectDirector
     /**
      * Create a new entity instance, result of the factory creation method
      *
-     * @return Object new Instance
+     * @return mixed new Instance
      */
     public function create()
     {

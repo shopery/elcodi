@@ -25,7 +25,7 @@ interface EntityTranslatorInterface
     /**
      * Translate object
      *
-     * @param Object $object Object
+     * @param mixed  $object Object
      * @param string $locale Locale to be translated
      */
     public function translate($object, $locale);
@@ -33,7 +33,7 @@ interface EntityTranslatorInterface
     /**
      * Saves object translations
      *
-     * @param Object $object       Object
+     * @param mixed  $object       Object
      * @param array  $translations Translations
      */
     public function save($object, array $translations);
