@@ -100,7 +100,7 @@ class TranslatableFieldType extends AbstractType
      *
      * @param EntityTranslationProviderInterface $entityTranslationProvider Entity Translation provider
      * @param FormConfigInterface                $formConfig                Form config
-     * @param Object                             $entity                    Entity
+     * @param mixed                              $entity                    Entity
      * @param string                             $fieldName                 Field name
      * @param array                              $entityConfiguration       Entity configuration
      * @param array                              $fieldConfiguration        Field configuration
