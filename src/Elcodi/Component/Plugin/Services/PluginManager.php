@@ -173,7 +173,7 @@ class PluginManager
      *
      * @return Plugin Plugin instance
      */
-    private function getPluginInstance(
+    protected function getPluginInstance(
         $pluginNamespace,
         $pluginConfiguration
     ) {
